@@ -2,6 +2,7 @@ package lk.test.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(view -> login());
+
+        checkLoginState();
     }
 
     private void login(){
@@ -48,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     private void handleLoginSuccessful(LoginResponse response) {
         if (response.success){
             Toast.makeText(this,"Login successful!",Toast.LENGTH_LONG).show();
-            // TODO: Navigate to task list
+            LoginManager.getInstance().setLoggedInState(true);
+            checkLoginState();
         }
         else{
             handleLoginFailed("Login returned unsuccessful!");
@@ -56,6 +60,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLoginFailed(String error){
-        Toast.makeText(this,"Login failed due to network error",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    }
+
+    private void checkLoginState() {
+        if (LoginManager.getInstance().getIsLoggedIn()){
+            showMainActivity();
+        }
+    }
+
+    private void showMainActivity(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

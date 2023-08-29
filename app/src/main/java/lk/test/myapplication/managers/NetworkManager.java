@@ -14,7 +14,7 @@ public class NetworkManager {
     private ConnectivityManager connectivityManager;
     private ContextManager contextManager;
     private Retrofit retrofit;
-    private final String baseUrl = "https://myserver.com/api/"; // Temporary
+    private final String baseUrl = "https://f52e6032-3d5d-4d43-ab52-e64cb891b7f0.mock.pstmn.io/"; // Temporary
 
     public static NetworkManager getInstance()
     {
@@ -49,7 +49,7 @@ public class NetworkManager {
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         boolean available = info != null && info.isConnectedOrConnecting();
 
-        if (available){
+        if (!available){
             Toast.makeText(context, "Please connect to the internet and retry", Toast.LENGTH_LONG).show();
         }
 

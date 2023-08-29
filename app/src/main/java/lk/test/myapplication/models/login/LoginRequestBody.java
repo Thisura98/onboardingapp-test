@@ -1,11 +1,11 @@
 package lk.test.myapplication.models.login;
 
 public class LoginRequestBody {
-    public String Username;
-    public String Password;
+    public String username;
+    public String password;
 
     public LoginRequestBody(String username, String password){
-        Username = username;
-        Password = password;
+        this.username = username;
+        this.password = password;
     }
 }
