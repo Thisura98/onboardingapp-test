@@ -12,7 +12,7 @@ import lk.test.myapplication.utilities.TimestampConverter;
 @Entity
 public class TaskEntity {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int id;
 
     public String title;

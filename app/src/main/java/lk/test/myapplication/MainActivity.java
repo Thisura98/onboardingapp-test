@@ -5,10 +5,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
+    private RelativeLayout loadingView;
     private RecyclerView recyclerView;
 
     @Override
@@ -24,6 +26,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(){
-
+        // TODO: Setup recycler view
     }
 }
