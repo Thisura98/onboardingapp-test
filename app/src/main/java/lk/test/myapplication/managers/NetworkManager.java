@@ -12,7 +12,7 @@ public class NetworkManager {
 
     private static NetworkManager singleton;
     private ConnectivityManager connectivityManager;
-    private Context context;
+    private ContextManager contextManager;
     private Retrofit retrofit;
     private final String baseUrl = "https://myserver.com/api/"; // Temporary
 
@@ -25,15 +25,12 @@ public class NetworkManager {
     }
 
     private NetworkManager() {
+        contextManager = ContextManager.getInstance();
+
         retrofit = new Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build();
-    }
-
-    public void setContext(Context context)
-    {
-        this.context = context;
     }
 
     public <T> T createService(Class<T> serviceClass)
@@ -42,6 +39,8 @@ public class NetworkManager {
     }
 
     public boolean checkNetworkAvailability(){
+        Context context = contextManager.getApplicationContext();
+
         if (connectivityManager == null) {
             connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);

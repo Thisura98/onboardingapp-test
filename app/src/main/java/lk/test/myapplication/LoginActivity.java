@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import lk.test.myapplication.managers.ContextManager;
 import lk.test.myapplication.managers.LoginManager;
 import lk.test.myapplication.models.login.LoginResponse;
 import lk.test.myapplication.models.login.LoginRequestBody;
@@ -27,9 +28,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Set the application context for later use
-        NetworkManager.getInstance().setContext(getApplicationContext());
-
+        ContextManager.getInstance().setApplicationContext(getApplicationContext());
         loginManager = LoginManager.getInstance();
 
         etUserName = findViewById(R.id.etUsername);
