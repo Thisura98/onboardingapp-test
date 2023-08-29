@@ -3,20 +3,21 @@ package lk.test.myapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import lk.test.myapplication.model.LoginResponse;
-import lk.test.myapplication.network.LoginRequestBody;
-import lk.test.myapplication.network.NetworkManager;
+import lk.test.myapplication.managers.LoginManager;
+import lk.test.myapplication.models.login.LoginResponse;
+import lk.test.myapplication.models.login.LoginRequestBody;
+import lk.test.myapplication.managers.NetworkManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private LoginManager loginManager;
     private EditText etUserName;
     private EditText etPassword;
     private Button btnLogin;
@@ -26,47 +27,36 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Set the application context for later use
+        NetworkManager.getInstance().setContext(getApplicationContext());
+
+        loginManager = LoginManager.getInstance();
+
         etUserName = findViewById(R.id.etUsername);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
-
         btnLogin.setOnClickListener(view -> login());
     }
 
-    private void login()
-    {
-        LoginRequestBody requestBody = new LoginRequestBody(etUserName.getText().toString(), etPassword.getText().toString());
-
-        NetworkManager.getInstance().getLoginService()
-            .login(requestBody)
-            .enqueue(new Callback<LoginResponse>() {
-                @Override
-                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    handleLoginSuccessful(response);
-                }
-
-                @Override
-                public void onFailure(Call<LoginResponse> call, Throwable t) {
-                    handleLoginFailed();
-                }
-            });
+    private void login(){
+        loginManager.login(
+            etUserName.getText().toString(),
+            etPassword.getText().toString(),
+            response -> handleLoginSuccessful(response),
+            error -> handleLoginFailed(error));
     }
 
-    private void handleLoginSuccessful(Response<LoginResponse> response)
-    {
-        if (response.body().success)
-        {
+    private void handleLoginSuccessful(LoginResponse response) {
+        if (response.success){
             Toast.makeText(this,"Login successful!",Toast.LENGTH_LONG).show();
             // TODO: Navigate to task list
         }
-        else
-        {
-            handleLoginFailed();
+        else{
+            handleLoginFailed("Login returned unsuccessful!");
         }
     }
 
-    private void handleLoginFailed()
-    {
+    private void handleLoginFailed(String error){
         Toast.makeText(this,"Login failed due to network error",Toast.LENGTH_LONG).show();
     }
 }

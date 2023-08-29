@@ -1,6 +1,5 @@
-package lk.test.myapplication.network;
+package lk.test.myapplication.models.login;
 
-import lk.test.myapplication.model.LoginResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
