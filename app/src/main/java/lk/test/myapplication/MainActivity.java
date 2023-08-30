@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,9 @@ import lk.test.myapplication.models.task.TaskStatus;
 public class MainActivity extends AppCompatActivity {
 
     private TasksManager tasksManager;
-
     private Toolbar toolbar;
     private RelativeLayout loadingView;
     private RecyclerView recyclerView;
-
     private TaskListAdapter adapter;
 
     @Override
@@ -47,13 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         tasksManager = TasksManager.getInstance();
         loadData();
-    }
-
-    private void setupRecyclerView(){
-        adapter = new TaskListAdapter();
-        adapter.setItemClickListener((view, position) -> handleItemClick(position));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
     }
 
     private void setIsLoading(boolean isLoading){
@@ -76,7 +68,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleError(String error){
         setIsLoading(false);
-        Log.d("Error", error);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+    }
+
+    private void setupRecyclerView(){
+        adapter = new TaskListAdapter();
+        adapter.setItemClickListener((view, position) -> handleItemClick(position));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     private void handleItemClick(int position){

@@ -1,10 +1,8 @@
 package lk.test.myapplication.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,9 +18,7 @@ import lk.test.myapplication.viewholder.TaskItemViewHolder;
 public class TaskListAdapter extends RecyclerView.Adapter {
 
     private List<TaskEntity> list;
-
     private ItemClickListener clickListener;
-
     public TaskListAdapter(){
         list = new ArrayList<>();
     }

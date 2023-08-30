@@ -28,13 +28,6 @@ public class TaskItemViewHolder extends RecyclerView.ViewHolder {
         tvStatus = itemView.findViewById(R.id.tvStatus);
     }
 
-    public void setData(TaskEntity entity, ItemClickListener clickListener){
-        tvTitle.setText(entity.title);
-        tvDueDate.setText(entity.getDueDateAsString());
-        setTaskStatus(entity.status);
-        setClickListener(clickListener);
-    }
-
     private void setStatusUI(String status, @DrawableRes int drawableResource){
         Context context = itemView.getContext();
         tvStatus.setText(status);
@@ -43,15 +36,9 @@ public class TaskItemViewHolder extends RecyclerView.ViewHolder {
 
     private void setTaskStatus(TaskStatus status){
         switch(status){
-            case PENDING:
-                setStatusUI("Pending", R.drawable.status_pending_drawable);
-                break;
-            case IN_PROGRESS:
-                setStatusUI("In progress", R.drawable.status_inprogress_drawable);
-                break;
-            case COMPLETED:
-                setStatusUI("Completed", R.drawable.status_complete_drawable);
-                break;
+            case PENDING: setStatusUI("Pending", R.drawable.status_pending_drawable); break;
+            case IN_PROGRESS: setStatusUI("In progress", R.drawable.status_inprogress_drawable); break;
+            case COMPLETED: setStatusUI("Completed", R.drawable.status_complete_drawable); break;
         }
     }
 
@@ -62,5 +49,12 @@ public class TaskItemViewHolder extends RecyclerView.ViewHolder {
         else{
             itemView.setOnClickListener(null);
         }
+    }
+
+    public void setData(TaskEntity entity, ItemClickListener clickListener){
+        tvTitle.setText(entity.title);
+        tvDueDate.setText(entity.getDueDateAsString());
+        setTaskStatus(entity.status);
+        setClickListener(clickListener);
     }
 }
