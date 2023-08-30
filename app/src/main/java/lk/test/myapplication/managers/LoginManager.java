@@ -90,4 +90,8 @@ public class LoginManager {
         SharedPreferences prefs = context.getSharedPreferences(loginStateFile, Context.MODE_PRIVATE);
         return prefs.getString(usernameKey, null);
     }
+
+    public void logout(){
+        setLoggedInState(false, null);
+    }
 }

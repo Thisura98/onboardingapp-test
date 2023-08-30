@@ -11,11 +11,6 @@ import android.widget.Toast;
 import lk.test.myapplication.managers.ContextManager;
 import lk.test.myapplication.managers.LoginManager;
 import lk.test.myapplication.models.login.LoginResponse;
-import lk.test.myapplication.models.login.LoginRequestBody;
-import lk.test.myapplication.managers.NetworkManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
