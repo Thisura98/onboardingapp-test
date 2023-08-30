@@ -18,6 +18,7 @@ public class LoginManager {
     private LoginService loginService;
     private final String loginStateFile = "loginstate";
     private final String isLoggedInKey = "logged_in";
+    private final String usernameKey = "username";
 
     public static LoginManager getInstance() {
         if (singleton == null)
@@ -54,7 +55,13 @@ public class LoginManager {
             .enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                    onSuccess.accept(response.body());
+                    if (response.body().success){
+                        setLoggedInState(true, username);
+                        onSuccess.accept(response.body());
+                    }
+                    else{
+                        onError.accept("Login returned unsuccessful");
+                    }
                 }
 
                 @Override
@@ -64,10 +71,11 @@ public class LoginManager {
             });
     }
 
-    public void setLoggedInState(boolean isLoggedIn){
+    public void setLoggedInState(boolean isLoggedIn, String username){
         Context context = ContextManager.getInstance().getApplicationContext();
         SharedPreferences.Editor editor = context.getSharedPreferences(loginStateFile, Context.MODE_PRIVATE).edit();
         editor.putBoolean(isLoggedInKey, isLoggedIn);
+        editor.putString(usernameKey, username);
         editor.apply();
     }
 
@@ -75,5 +83,11 @@ public class LoginManager {
         Context context = ContextManager.getInstance().getApplicationContext();
         SharedPreferences prefs = context.getSharedPreferences(loginStateFile, Context.MODE_PRIVATE);
         return prefs.getBoolean(isLoggedInKey, false);
+    }
+
+    public String getLoggedInUsername(){
+        Context context = ContextManager.getInstance().getApplicationContext();
+        SharedPreferences prefs = context.getSharedPreferences(loginStateFile, Context.MODE_PRIVATE);
+        return prefs.getString(usernameKey, null);
     }
 }

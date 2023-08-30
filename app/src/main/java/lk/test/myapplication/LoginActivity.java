@@ -49,14 +49,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLoginSuccessful(LoginResponse response) {
-        if (response.success){
-            Toast.makeText(this,"Login successful!",Toast.LENGTH_LONG).show();
-            LoginManager.getInstance().setLoggedInState(true);
-            checkLoginState();
-        }
-        else{
-            handleLoginFailed("Login returned unsuccessful!");
-        }
+        Toast.makeText(this,"Login successful!",Toast.LENGTH_LONG).show();
+        checkLoginState();
     }
 
     private void handleLoginFailed(String error){
