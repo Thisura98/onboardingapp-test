@@ -7,7 +7,7 @@ import androidx.room.TypeConverters;
 
 import java.util.Date;
 
-import lk.test.myapplication.utilities.TimestampConverter;
+import lk.test.myapplication.utilities.DatabaseTypeConverters;
 
 @Entity
 public class TaskEntity {
@@ -18,9 +18,18 @@ public class TaskEntity {
     public String title;
 
     @ColumnInfo(name = "due_date")
-    @TypeConverters({TimestampConverter.class})
+    @TypeConverters({DatabaseTypeConverters.class})
     public Date dueDate;
 
-    public int status;
+    public TaskStatus status;
+
+    public static TaskEntity fromDto(TaskDto dto){
+        TaskEntity entity = new TaskEntity();
+        entity.id = 0; // room db will autogenerate for us after insert()
+        entity.title = dto.title;
+        entity.dueDate = DatabaseTypeConverters.fromTimestamp(dto.dueDate);
+        entity.status = TaskStatus.PENDING; // set default state
+        return entity;
+    }
 
 }

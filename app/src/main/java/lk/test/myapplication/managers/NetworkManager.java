@@ -38,7 +38,7 @@ public class NetworkManager {
         return retrofit.create(serviceClass);
     }
 
-    public boolean checkNetworkAvailability(){
+    public boolean isNetworkAvailable(){
         Context context = contextManager.getApplicationContext();
 
         if (connectivityManager == null) {

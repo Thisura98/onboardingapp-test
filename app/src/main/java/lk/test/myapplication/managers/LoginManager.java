@@ -46,7 +46,7 @@ public class LoginManager {
         Consumer<LoginResponse> onSuccess,
         Consumer<String> onError) {
 
-        if (!NetworkManager.getInstance().checkNetworkAvailability())
+        if (!NetworkManager.getInstance().isNetworkAvailable())
             return;
 
         LoginRequestBody body = new LoginRequestBody(username, password);

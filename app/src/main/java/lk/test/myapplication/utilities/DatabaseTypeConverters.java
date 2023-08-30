@@ -7,20 +7,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TimestampConverter {
+public class DatabaseTypeConverters {
     static DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
     @TypeConverter
     public static Date fromTimestamp(String value) {
-        if (value != null) {
-            try {
-                return df.parse(value);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            return null;
-        } else {
+        try {
+            return value == null ? null : df.parse(value);
+        }
+        catch(ParseException e){
+            e.printStackTrace();
             return null;
         }
+    }
+
+    @TypeConverter
+    public static String dateToString(Date value){
+        return value == null ? null : df.format(value);
     }
 }
