@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.RelativeLayout;
+
+import java.util.List;
 
 import lk.test.myapplication.managers.DatabaseManager;
 import lk.test.myapplication.managers.TasksManager;
@@ -41,14 +44,28 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Setup recycler view
     }
 
+    private void setIsLoading(boolean isLoading){
+        loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+    }
+
     private void loadData(){
+        setIsLoading(true);
         tasksManager.getTasks(
-            tasks -> {
-                for (TaskEntity t : tasks){
-                    Log.d("Entity", String.format("%d %s %s", t.id, t.title, t.status));
-                }
-            },
-            error -> Log.d("Error", error)
+            tasks -> handleDataLoaded(tasks),
+            error -> handleError(error)
         );
+    }
+
+    private void handleDataLoaded(List<TaskEntity> tasks){
+        setIsLoading(false);
+        for (TaskEntity t : tasks){
+            Log.d("Entity", String.format("%d %s %s", t.id, t.title, t.status));
+        }
+    }
+
+    private void handleError(String error){
+        setIsLoading(false);
+        Log.d("Error", error);
     }
 }

@@ -58,7 +58,7 @@ public class TasksManager {
                 else{
                     getTasksFromServer(
                         serverTasks -> {
-                            insertServerTasks(serverTasks);
+                            saveServerTasks(serverTasks);
                             onTasksLoaded.accept(dao.getAll());
                         },
                         error -> onError.accept(error)
@@ -95,7 +95,7 @@ public class TasksManager {
         }
     }
 
-    private void insertServerTasks(List<TaskDto> serverTasks){
+    private void saveServerTasks(List<TaskDto> serverTasks){
         // Remove existing data to prevent conflicts.
         // Alternatively, we can introduce a conflict resolution strategy.
         databaseManager.db().taskDao().removeAll();
