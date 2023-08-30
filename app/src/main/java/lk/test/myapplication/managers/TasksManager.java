@@ -1,5 +1,7 @@
 package lk.test.myapplication.managers;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import lk.test.myapplication.models.task.TaskDto;
 import lk.test.myapplication.models.task.TaskEntity;
 import lk.test.myapplication.models.task.TaskResponse;
 import lk.test.myapplication.models.task.TaskService;
+import lk.test.myapplication.models.task.TaskStatus;
+import lk.test.myapplication.utilities.MainThreadHelper;
 import retrofit2.Response;
 
 public class TasksManager {
@@ -53,7 +57,7 @@ public class TasksManager {
                 List<TaskEntity> dbTasks = dao.getAll();
 
                 if (dbTasks == null || dbTasks.size() > 0){
-                    onTasksLoaded.accept(dbTasks);
+                    MainThreadHelper.onMainThread(() -> onTasksLoaded.accept(dbTasks));
                 }
                 else{
                     getTasksFromServer(
@@ -65,6 +69,34 @@ public class TasksManager {
                     );
                 }
 
+            }
+        }).start();
+    }
+
+    public TaskStatus getNextTaskStatus(TaskStatus status){
+        switch(status){
+            case PENDING: return TaskStatus.IN_PROGRESS;
+            case IN_PROGRESS: return TaskStatus.COMPLETED;
+            default: return null;
+        }
+    }
+
+    public void updateTaskStatus(TaskEntity task, TaskStatus nextStatus, Runnable onSuccess, Consumer<String> onError){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                task.status = nextStatus;
+
+                try{
+                    databaseManager.db().taskDao().update(task);
+                    MainThreadHelper.onMainThread(onSuccess);
+                }
+                catch(Exception e){
+                    Log.e("Update", e.toString());
+                    MainThreadHelper.onMainThread(() -> {
+                        onError.accept("Error occurred while trying to change task status");
+                    });
+                }
             }
         }).start();
     }

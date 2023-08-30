@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,10 +16,12 @@ import java.util.List;
 
 import lk.test.myapplication.adapter.TaskListAdapter;
 import lk.test.myapplication.managers.DatabaseManager;
+import lk.test.myapplication.managers.NetworkManager;
 import lk.test.myapplication.managers.TasksManager;
 import lk.test.myapplication.models.task.TaskDao;
 import lk.test.myapplication.models.task.TaskEntity;
 import lk.test.myapplication.models.task.TaskService;
+import lk.test.myapplication.models.task.TaskStatus;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupRecyclerView(){
         adapter = new TaskListAdapter();
+        adapter.setItemClickListener((view, position) -> handleItemClick(position));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
     }
@@ -60,21 +64,49 @@ public class MainActivity extends AppCompatActivity {
     private void loadData(){
         setIsLoading(true);
         tasksManager.getTasks(
-            tasks -> handleDataLoaded(tasks),
-            error -> handleError(error)
+            this::handleDataLoaded,
+            this::handleError
         );
     }
 
     private void handleDataLoaded(List<TaskEntity> tasks){
         setIsLoading(false);
         adapter.updateData(tasks);
-//        for (TaskEntity t : tasks){
-//            Log.d("Entity", String.format("%d %s %s", t.id, t.title, t.status));
-//        }
     }
 
     private void handleError(String error){
         setIsLoading(false);
         Log.d("Error", error);
     }
+
+    private void handleItemClick(int position){
+        TaskEntity task = adapter.getTaskAt(position);
+        TaskStatus nextStatus = tasksManager.getNextTaskStatus(task.status);
+
+        Log.d("Click", "You clicked " + task.title);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        if (nextStatus == null){
+            builder.setTitle("Task already completed");
+            builder.setMessage("You cannot change the state of completed tasks");
+            builder.setPositiveButton("OK", null);
+        }
+        else{
+            String nextStatusName = String.format("\"%s\"?", nextStatus);
+
+            builder.setTitle("Change task status");
+            builder.setMessage("Do you want to change the status to " + nextStatusName);
+            builder.setNegativeButton("NO", null);
+            builder.setPositiveButton("OK", (dialog, which) -> handleChangeItemStatus(task, nextStatus));
+        }
+
+        builder.show();
+    }
+
+    private void handleChangeItemStatus(TaskEntity task, TaskStatus nextStatus){
+        tasksManager.updateTaskStatus(task, nextStatus, this::loadData, this::handleError);
+    }
+
+
 }

@@ -14,11 +14,14 @@ import java.util.List;
 
 import lk.test.myapplication.R;
 import lk.test.myapplication.models.task.TaskEntity;
+import lk.test.myapplication.utilities.ItemClickListener;
 import lk.test.myapplication.viewholder.TaskItemViewHolder;
 
 public class TaskListAdapter extends RecyclerView.Adapter {
 
-    List<TaskEntity> list;
+    private List<TaskEntity> list;
+
+    private ItemClickListener clickListener;
 
     public TaskListAdapter(){
         list = new ArrayList<>();
@@ -35,7 +38,7 @@ public class TaskListAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         TaskItemViewHolder taskItemViewHolder = (TaskItemViewHolder) holder;
-        taskItemViewHolder.setData(list.get(position));
+        taskItemViewHolder.setData(list.get(position), clickListener);
     }
 
     @Override
@@ -46,5 +49,13 @@ public class TaskListAdapter extends RecyclerView.Adapter {
     public void updateData(List<TaskEntity> list){
         this.list = list;
         notifyDataSetChanged();
+    }
+
+    public void setItemClickListener(ItemClickListener clickListener){
+        this.clickListener = clickListener;
+    }
+
+    public TaskEntity getTaskAt(int position){
+        return list.get(position);
     }
 }

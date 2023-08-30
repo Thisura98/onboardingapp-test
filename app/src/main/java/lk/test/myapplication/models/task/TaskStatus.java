@@ -20,4 +20,13 @@ public enum TaskStatus {
             default: return 0;
         }
     }
+
+    @Override
+    public String toString(){
+        switch(this){
+            case IN_PROGRESS: return "In progress";
+            case COMPLETED: return "Completed";
+            default: return "Pending";
+        }
+    }
 }

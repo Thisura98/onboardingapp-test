@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -14,6 +15,8 @@ public interface TaskDao {
 
     @Insert
     void insertAll(List<TaskEntity> tasks);
+    @Update
+    void update(TaskEntity task);
 
     @Query("DELETE FROM TaskEntity")
     void removeAll();
