@@ -13,8 +13,8 @@ public enum TaskStatus {
         }
     }
 
-    public static int toInteger(TaskStatus status){
-        switch(status){
+    public int toInteger(){
+        switch(this){
             case IN_PROGRESS: return 1;
             case COMPLETED: return 2;
             default: return 0;

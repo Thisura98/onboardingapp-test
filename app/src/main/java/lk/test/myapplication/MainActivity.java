@@ -2,6 +2,7 @@ package lk.test.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -9,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lk.test.myapplication.adapter.TaskListAdapter;
 import lk.test.myapplication.managers.DatabaseManager;
 import lk.test.myapplication.managers.TasksManager;
 import lk.test.myapplication.models.task.TaskDao;
@@ -19,11 +22,13 @@ import lk.test.myapplication.models.task.TaskService;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TasksManager tasksManager;
+
     private Toolbar toolbar;
     private RelativeLayout loadingView;
     private RecyclerView recyclerView;
 
-    private TasksManager tasksManager;
+    private TaskListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.toolbar);
+        loadingView = findViewById(R.id.loadingView);
         recyclerView = findViewById(R.id.recyclerView);
 
         setSupportActionBar(toolbar);
@@ -41,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(){
-        // TODO: Setup recycler view
+        adapter = new TaskListAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     private void setIsLoading(boolean isLoading){
@@ -59,9 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleDataLoaded(List<TaskEntity> tasks){
         setIsLoading(false);
-        for (TaskEntity t : tasks){
-            Log.d("Entity", String.format("%d %s %s", t.id, t.title, t.status));
-        }
+        adapter.updateData(tasks);
+//        for (TaskEntity t : tasks){
+//            Log.d("Entity", String.format("%d %s %s", t.id, t.title, t.status));
+//        }
     }
 
     private void handleError(String error){

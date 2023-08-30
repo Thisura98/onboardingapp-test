@@ -32,4 +32,8 @@ public class TaskEntity {
         return entity;
     }
 
+    public String getDueDateAsString(){
+        return dueDate == null ? null : DatabaseTypeConverters.dateToString(dueDate);
+    }
+
 }
