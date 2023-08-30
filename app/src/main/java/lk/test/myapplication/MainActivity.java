@@ -98,14 +98,18 @@ public class MainActivity extends AppCompatActivity {
             builder.setTitle("Change task status");
             builder.setMessage("Do you want to change the status to " + nextStatusName);
             builder.setNegativeButton("NO", null);
-            builder.setPositiveButton("OK", (dialog, which) -> handleChangeItemStatus(task, nextStatus));
+            builder.setPositiveButton("OK", (dialog, which) -> handleChangeItemStatus(task, nextStatus, position));
         }
 
         builder.show();
     }
 
-    private void handleChangeItemStatus(TaskEntity task, TaskStatus nextStatus){
-        tasksManager.updateTaskStatus(task, nextStatus, this::loadData, this::handleError);
+    private void handleChangeItemStatus(TaskEntity task, TaskStatus nextStatus, int position){
+        tasksManager.updateTaskStatus(
+            task,
+            nextStatus,
+            newTask -> adapter.updateTaskAt(position, newTask),
+            this::handleError);
     }
 
 

@@ -58,4 +58,9 @@ public class TaskListAdapter extends RecyclerView.Adapter {
     public TaskEntity getTaskAt(int position){
         return list.get(position);
     }
+
+    public void updateTaskAt(int position, TaskEntity newTask){
+        this.list.set(position, newTask);
+        notifyItemChanged(position);
+    }
 }

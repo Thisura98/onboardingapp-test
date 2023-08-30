@@ -36,39 +36,29 @@ public class TasksManager {
     /**
      * Check if the local db has any tasks, if so return them. Otherwise,
      * fetch new list from the server.
-     *
-     * @param onTasksLoaded Handler to receive the tasks
-     * @param onError Error handler
      */
     public void getTasks(Consumer<List<TaskEntity>> onTasksLoaded, Consumer<String> onError){
 
         /**
          * Always perform db operations in the background thread.
-         * In Java, this is achieved by creating a new Thread object and passing a "Runnable" object.
-         *
-         * RoomDB library will crash on main-thread as a failsafe if you don't.
+         * In Java, this is done by creating a new Thread and passing a "Runnable" object.
          */
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
+            TaskDao dao = databaseManager.db().taskDao();
+            List<TaskEntity> dbTasks = dao.getAll();
 
-                TaskDao dao = databaseManager.db().taskDao();
-                List<TaskEntity> dbTasks = dao.getAll();
-
-                if (dbTasks == null || dbTasks.size() > 0){
-                    MainThreadHelper.onMainThread(() -> onTasksLoaded.accept(dbTasks));
-                }
-                else{
-                    getTasksFromServer(
-                        serverTasks -> {
-                            saveServerTasks(serverTasks);
-                            onTasksLoaded.accept(dao.getAll());
-                        },
-                        error -> onError.accept(error)
-                    );
-                }
-
+            if (dbTasks == null || dbTasks.size() > 0){
+                MainThreadHelper.onMainThread(() -> onTasksLoaded.accept(dbTasks));
+            }
+            else{
+                getTasksFromServer(
+                    serverTasks -> {
+                        saveServerTasks(serverTasks);
+                        onTasksLoaded.accept(dao.getAll());
+                    },
+                    onError
+                );
             }
         }).start();
     }
@@ -81,7 +71,7 @@ public class TasksManager {
         }
     }
 
-    public void updateTaskStatus(TaskEntity task, TaskStatus nextStatus, Runnable onSuccess, Consumer<String> onError){
+    public void updateTaskStatus(TaskEntity task, TaskStatus nextStatus, Consumer<TaskEntity> onSuccess, Consumer<String> onError){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -89,7 +79,7 @@ public class TasksManager {
 
                 try{
                     databaseManager.db().taskDao().update(task);
-                    MainThreadHelper.onMainThread(onSuccess);
+                    MainThreadHelper.onMainThread(() -> onSuccess.accept(task));
                 }
                 catch(Exception e){
                     Log.e("Update", e.toString());
