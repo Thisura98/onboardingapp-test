@@ -16,16 +16,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lk.test.myapplication.adapter.TaskListAdapter;
-import lk.test.myapplication.managers.DatabaseManager;
-import lk.test.myapplication.managers.NetworkManager;
 import lk.test.myapplication.managers.TasksManager;
-import lk.test.myapplication.models.task.TaskDao;
 import lk.test.myapplication.models.task.TaskEntity;
-import lk.test.myapplication.models.task.TaskService;
 import lk.test.myapplication.models.task.TaskStatus;
 
 public class MainActivity extends AppCompatActivity {

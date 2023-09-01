@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 
 import java.util.function.Consumer;
 
-import lk.test.myapplication.models.login.LoginRequestBody;
-import lk.test.myapplication.models.login.LoginResponse;
-import lk.test.myapplication.models.login.LoginService;
+import lk.test.myapplication.retrofit.login.LoginRequestBody;
+import lk.test.myapplication.retrofit.login.LoginResponse;
+import lk.test.myapplication.retrofit.login.LoginService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

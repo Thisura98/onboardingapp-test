@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import lk.test.myapplication.managers.ContextManager;
 import lk.test.myapplication.managers.LoginManager;
-import lk.test.myapplication.models.login.LoginResponse;
+import lk.test.myapplication.retrofit.login.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
 

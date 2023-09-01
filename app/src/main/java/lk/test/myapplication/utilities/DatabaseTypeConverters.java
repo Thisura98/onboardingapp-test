@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DatabaseTypeConverters {
-    static DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+    static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @TypeConverter
     public static Date fromTimestamp(String value) {

@@ -1,7 +1,5 @@
 package lk.test.myapplication.managers;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -9,10 +7,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import lk.test.myapplication.models.task.TaskDao;
-import lk.test.myapplication.models.task.TaskDto;
+import lk.test.myapplication.retrofit.task.TaskDto;
 import lk.test.myapplication.models.task.TaskEntity;
-import lk.test.myapplication.models.task.TaskResponse;
-import lk.test.myapplication.models.task.TaskService;
+import lk.test.myapplication.retrofit.task.TaskResponse;
+import lk.test.myapplication.retrofit.task.TaskService;
 import lk.test.myapplication.models.task.TaskStatus;
 import lk.test.myapplication.utilities.MainThreadHelper;
 import retrofit2.Response;

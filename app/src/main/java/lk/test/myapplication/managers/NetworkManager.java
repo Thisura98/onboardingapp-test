@@ -14,7 +14,7 @@ public class NetworkManager {
     private ConnectivityManager connectivityManager;
     private ContextManager contextManager;
     private Retrofit retrofit;
-    private final String baseUrl = "https://f52e6032-3d5d-4d43-ab52-e64cb891b7f0.mock.pstmn.io/"; // Temporary
+    private final String baseUrl = "http://146.190.156.54/"; // Temporary
 
     public static NetworkManager getInstance()
     {
