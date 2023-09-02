@@ -55,9 +55,10 @@ public class TasksManager {
                 getTasksFromServer(
                     serverTasks -> {
                         saveServerTasks(serverTasks);
-                        onTasksLoaded.accept(dao.getAll());
+                        List<TaskEntity> allTasks = dao.getAll();
+                        MainThreadHelper.onMainThread(() -> onTasksLoaded.accept(allTasks));
                     },
-                    onError
+                    error -> MainThreadHelper.onMainThread(() -> onError.accept(error))
                 );
             }
         }).start();
