@@ -1,7 +1,5 @@
 package lk.test.myapplication.managers;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -9,10 +7,10 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import lk.test.myapplication.models.task.TaskDao;
-import lk.test.myapplication.models.task.TaskDto;
+import lk.test.myapplication.retrofit.task.TaskDto;
 import lk.test.myapplication.models.task.TaskEntity;
-import lk.test.myapplication.models.task.TaskResponse;
-import lk.test.myapplication.models.task.TaskService;
+import lk.test.myapplication.retrofit.task.TaskResponse;
+import lk.test.myapplication.retrofit.task.TaskService;
 import lk.test.myapplication.models.task.TaskStatus;
 import lk.test.myapplication.utilities.MainThreadHelper;
 import retrofit2.Response;
@@ -52,13 +50,19 @@ public class TasksManager {
                 MainThreadHelper.onMainThread(() -> onTasksLoaded.accept(dbTasks));
             }
             else{
-                getTasksFromServer(
-                    serverTasks -> {
-                        saveServerTasks(serverTasks);
-                        onTasksLoaded.accept(dao.getAll());
-                    },
-                    onError
-                );
+                if (!NetworkManager.getInstance().isNetworkAvailable()){
+                    MainThreadHelper.onMainThread(() -> onError.accept("No internet connection"));
+                }
+
+                List<TaskDto> serverTasks = getTasksFromServer();
+                if (serverTasks == null){
+                    MainThreadHelper.onMainThread(() -> onError.accept("Could not fetch tasks from server"));
+                }
+                else{
+                    saveServerTasks(serverTasks);
+                    List<TaskEntity> newDbTasks = dao.getAll();
+                    MainThreadHelper.onMainThread(() -> onTasksLoaded.accept(newDbTasks));
+                }
             }
         }).start();
     }
@@ -95,25 +99,15 @@ public class TasksManager {
      * Synchronously retrieves the tasks from the server.
      * Always call this method from a background thread.
      */
-    private void getTasksFromServer(Consumer<List<TaskDto>> onTasksLoaded, Consumer<String> onError) {
-        if (!NetworkManager.getInstance().isNetworkAvailable()){
-            onError.accept("No internet connection");
-        }
-
+    private List<TaskDto> getTasksFromServer() {
         try{
             Response<TaskResponse> response = taskService.tasks().execute();
-            TaskResponse taskResponse = response.body();
-
-            if (taskResponse.success){
-                onTasksLoaded.accept(taskResponse.tasks);
-            }
-            else{
-                onError.accept("Retrieving tasks list from server failed");
-            }
+            List<TaskDto> tasks = response.body().tasks;
+            return tasks;
         }
         catch(Exception e){
             Log.d("Error", e.toString());
-            onError.accept("Unknown error while receiving task list from server");
+            return null;
         }
     }
 

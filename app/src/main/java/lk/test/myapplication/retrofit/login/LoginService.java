@@ -1,4 +1,4 @@
-package lk.test.myapplication.models.login;
+package lk.test.myapplication.retrofit.login;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

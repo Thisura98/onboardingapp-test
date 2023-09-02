@@ -7,6 +7,7 @@ import androidx.room.TypeConverters;
 
 import java.util.Date;
 
+import lk.test.myapplication.retrofit.task.TaskDto;
 import lk.test.myapplication.utilities.DatabaseTypeConverters;
 
 @Entity

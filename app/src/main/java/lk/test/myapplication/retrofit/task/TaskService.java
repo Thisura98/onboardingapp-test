@@ -1,4 +1,4 @@
-package lk.test.myapplication.models.task;
+package lk.test.myapplication.retrofit.task;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

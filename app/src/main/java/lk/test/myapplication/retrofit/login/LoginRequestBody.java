@@ -1,4 +1,4 @@
-package lk.test.myapplication.models.login;
+package lk.test.myapplication.retrofit.login;
 
 public class LoginRequestBody {
     public String username;

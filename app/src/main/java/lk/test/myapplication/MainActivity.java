@@ -1,27 +1,26 @@
 package lk.test.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import lk.test.myapplication.adapter.TaskListAdapter;
-import lk.test.myapplication.managers.DatabaseManager;
-import lk.test.myapplication.managers.NetworkManager;
 import lk.test.myapplication.managers.TasksManager;
-import lk.test.myapplication.models.task.TaskDao;
 import lk.test.myapplication.models.task.TaskEntity;
-import lk.test.myapplication.models.task.TaskService;
 import lk.test.myapplication.models.task.TaskStatus;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +46,21 @@ public class MainActivity extends AppCompatActivity {
         tasksManager = TasksManager.getInstance();
         loadData();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_item_info){
+            showInformationActivity();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void setIsLoading(boolean isLoading){
         loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
@@ -111,5 +125,9 @@ public class MainActivity extends AppCompatActivity {
             this::handleError);
     }
 
+    private void showInformationActivity(){
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
 
 }

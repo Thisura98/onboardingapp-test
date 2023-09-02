@@ -1,8 +1,13 @@
 package lk.test.myapplication.managers;
 
+import android.util.Log;
+
 import androidx.room.Room;
 
+import java.util.function.Consumer;
+
 import lk.test.myapplication.models.database.AppDatabase;
+import lk.test.myapplication.utilities.MainThreadHelper;
 
 public class DatabaseManager {
 
@@ -26,6 +31,20 @@ public class DatabaseManager {
 
     public AppDatabase db(){
         return database;
+    }
+
+    public void clearDatabase(Runnable onSuccess, Consumer<String> onError){
+        new Thread(() -> {
+            try{
+                database.clearAllTables();
+                MainThreadHelper.onMainThread(onSuccess);
+            }
+            catch(Exception e){
+                Log.e("ClearDB", e.toString());
+                onError.accept("Error occurred while clearing database");
+            }
+
+        }).start();
     }
 
 }

@@ -10,12 +10,7 @@ import android.widget.Toast;
 
 import lk.test.myapplication.managers.ContextManager;
 import lk.test.myapplication.managers.LoginManager;
-import lk.test.myapplication.models.login.LoginResponse;
-import lk.test.myapplication.models.login.LoginRequestBody;
-import lk.test.myapplication.managers.NetworkManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import lk.test.myapplication.retrofit.login.LoginResponse;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -49,14 +44,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleLoginSuccessful(LoginResponse response) {
-        if (response.success){
-            Toast.makeText(this,"Login successful!",Toast.LENGTH_LONG).show();
-            LoginManager.getInstance().setLoggedInState(true);
-            checkLoginState();
-        }
-        else{
-            handleLoginFailed("Login returned unsuccessful!");
-        }
+        Toast.makeText(this,"Login successful!",Toast.LENGTH_LONG).show();
+        checkLoginState();
     }
 
     private void handleLoginFailed(String error){
